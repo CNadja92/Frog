@@ -20,18 +20,20 @@ async def on_ready():
 @bot.command()
 async def jordan(ctx):
     source = 'jordan.mp3'
+    voice_client = discord.utils.get(bot.voice_clients)
+
+    if voice_client:
+        await ctx.send('Connected to voice channel already')
+        return
+
     try:
         voice_channel = ctx.author.voice.channel
+        voice_client = await voice_channel.connect()
     except:
         await ctx.channel.send('Connect to VC')
     else:
-        try:
-            connection = await voice_channel.connect()
-        except:
-            print('Already connected')
-        else:
-            connection.play(discord.FFmpegPCMAudio(source = source, executable = "ffmpeg"), 
-                after = lambda _ : asyncio.run_coroutine_threadsafe(coro=connection.disconnect(), loop = connection.loop))
+        voice_client.play(discord.FFmpegPCMAudio(source = source, executable = "ffmpeg"), 
+                after = lambda _ : asyncio.run_coroutine_threadsafe(coro=voice_client.disconnect(), loop = voice_client.loop))
 
 @bot.command()
 async def fernando(ctx):
