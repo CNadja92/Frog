@@ -6,15 +6,39 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-intents=discord.Intents.all()
-client = discord.Client(intents=intents)
+intents = discord.Intents.all()
+#client = discord.Client(intents=intents)
 token = os.getenv('TOKEN')
 
+bot = discord.ext.commands.Bot(command_prefix = '!', intents = intents)
 
-@client.event
+
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('We have logged in!')
 
+@bot.command()
+async def jordan(ctx):
+    try:
+        voice_channel = ctx.author.voice.channel
+    except:
+        await ctx.channel.send('Connect to VC')
+    else:
+        connection = await voice_channel.connect()
+        connection.play(discord.FFmpegPCMAudio(source = "./Desktop/Bot/sample.mp3", executable = "./Desktop/ffmpeg/bin/ffmpeg.exe"), after=lambda e: print('Test text'))
+        while connection.is_playing():
+            time.sleep(0.1)
+        await connection.disconnect()
+
+@bot.command()
+async def fernando(ctx):
+    await ctx.send('@Lerggio#5880 What day is it?')
+    with open('./Desktop/Bot/frog.png', 'rb') as f:
+        picture = discord.File(f)
+        await ctx.send(file=picture)
+    return
+
+''''
 @commands.command()
 async def check_voice(ctx):
     try:
@@ -27,6 +51,7 @@ async def check_voice(ctx):
         while connection.is_playing():
             time.sleep(0.1)
         await connection.disconnect()
+
         
           
 @commands.command()
@@ -50,4 +75,6 @@ async def on_message(message):
         await check_voice(message)
         #await voice_dc(client.user)
 
-client.run(token)
+'''
+bot.run(token)
+#client.run(token)
