@@ -1,6 +1,8 @@
 import os
 import discord
 import asyncio
+import disnake
+from disnake.ext import commands
 from discord.ext import commands  
 from dotenv import load_dotenv
 
@@ -11,6 +13,19 @@ token = os.getenv('TOKEN')
 
 bot = discord.ext.commands.Bot(command_prefix = '!', intents = intents)
 
+class MyHelp(commands.HelpCommand):
+    async def send_bot_help(self, mapping):
+        filtered = await self.filter_commands(self.context.bot.commands, sort = True)  # returns a list of command objects
+        names = [command.name for command in filtered] # iterating through the commands objects getting names
+        available_commands = "\n".join(names) # joining the list of names by a new line
+        embed  = disnake.Embed(description=available_commands)
+        await self.context.send(embed=embed)
+
+    async def send_error_message(self, error):
+        channel = self.get_destination() # defaults to command context channel
+        await channel.send(error)
+
+bot.help_command = MyHelp()
 
 @bot.event
 async def on_ready():
