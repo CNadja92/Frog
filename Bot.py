@@ -40,9 +40,9 @@ async def on_ready():
 async def one_piece():
     await bot.wait_until_ready()
 
-    # get text channel
-    channel_id = 1062734654634999861
-    channel = bot.get_channel(channel_id)
+    #  text channels
+    Test_id = 1062734654634999861
+    
     Shiba_id = 245706289550852098
 
     while not bot.is_closed():
@@ -63,7 +63,15 @@ async def one_piece():
         link = soup.find('a', href=lambda href: href and chapter in str(href))
         if link is not None: # if href exists, post link and update database
             href_value = link['href']
+
+            # send to Test channel
+            channel = bot.get_channel(Test_id)
             await channel.send('https://onepiecechapters.com' + href_value)
+
+            # send to Shiba channel
+            channel = bot.get_channel(Shiba_id)
+            await channel.send('https://onepiecechapters.com' + href_value)
+
             next_ch = result+1
             cursor.execute("UPDATE MangaChapter SET ChapterNum = ? WHERE Name = ?", (next_ch, 'One Piece'))
             conn.commit() # commit executed changes
