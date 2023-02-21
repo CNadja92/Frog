@@ -4,3 +4,5 @@
 -- VALUES ('One Piece', 1074)
 
 SELECT * FROM MangaChapter;
+
+-- UPDATE MangaChapter SET ChapterNum = 1075
